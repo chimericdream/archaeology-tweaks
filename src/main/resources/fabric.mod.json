@@ -1,0 +1,32 @@
+{
+    "schemaVersion": 1,
+    "id": "archaeology-tweaks",
+    "version": "${version}",
+    "name": "Arcaheology Tweaks",
+    "description": "Small, vanilla-friendly tweaks to Minecraft's archaeology system.",
+    "authors": ["chimericdream"],
+    "contact": {
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/archaeology-tweaks",
+        "sources": "https://github.com/chimericdream/archaeology-tweaks"
+    },
+    "license": "MIT",
+    "icon": "assets/archtweaks/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.chimericdream.archtweaks.ArchTweaksMod"
+        ]
+    },
+    "mixins": [
+        "archaeology-tweaks.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.15.0",
+        "minecraft": "~1.21",
+        "java": ">=21",
+        "cloth-config": ">=15.0.0"
+    },
+    "recommends": {
+        "modmenu": ">=11.0.0"
+    }
+}
