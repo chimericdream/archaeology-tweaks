@@ -1,5 +1,6 @@
 package com.chimericdream.archtweaks.mixin;
 
+import com.chimericdream.archtweaks.block.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,6 +18,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(FallingBlock.class)
 public abstract class FallingBlockMixin extends Block {
@@ -24,23 +26,32 @@ public abstract class FallingBlockMixin extends Block {
         super(settings);
     }
 
+    @Unique
+    protected boolean canHideItems(Block target) {
+        return target.equals(Blocks.SAND) || target.equals(Blocks.GRAVEL) || target.equals(Blocks.RED_SAND);
+    }
+
+    @Unique
+    protected BlockState getHiddenState(Block target) {
+        if (target.equals(Blocks.SAND)) {
+            return Blocks.SUSPICIOUS_SAND.getDefaultState();
+        }
+
+        if (target.equals(Blocks.GRAVEL)){
+            return Blocks.SUSPICIOUS_GRAVEL.getDefaultState();
+        }
+
+        return ModBlocks.SUSPICIOUS_RED_SAND.getDefaultState();
+    }
+
     @Override
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         Block target = state.getBlock();
-        if (!target.equals(Blocks.SAND) && !target.equals(Blocks.GRAVEL)) {
+        if (!canHideItems(target)) {
             return ActionResult.PASS;
         }
 
-        if (!player.isSneaking()) {
-            return ActionResult.PASS;
-        }
-
-        BlockState newState;
-        if (target.equals(Blocks.SAND)) {
-            newState = Blocks.SUSPICIOUS_SAND.getDefaultState();
-        } else {
-            newState = Blocks.SUSPICIOUS_GRAVEL.getDefaultState();
-        }
+        BlockState newState = getHiddenState(target);
 
         Item offhandItem = player.getOffHandStack().getItem();
 
@@ -56,7 +67,9 @@ public abstract class FallingBlockMixin extends Block {
 
             be.readNbt(nbt, world.getRegistryManager());
             world.addBlockEntity(be);
-            player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            if (!player.isCreative()) {
+                player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+            }
 
             return ActionResult.SUCCESS;
         }
