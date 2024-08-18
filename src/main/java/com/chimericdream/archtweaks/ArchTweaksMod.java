@@ -23,8 +23,15 @@ public class ArchTweaksMod implements ModInitializer {
         BLOCKS.register();
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(content -> content.addAfter(
-            Items.SUSPICIOUS_SAND,
-            ModBlocks.SUSPICIOUS_RED_SAND
+            Items.SUSPICIOUS_GRAVEL,
+            ModBlocks.SUSPICIOUS_CLAY,
+            ModBlocks.SUSPICIOUS_DIRT,
+            ModBlocks.SUSPICIOUS_MUD,
+            ModBlocks.SUSPICIOUS_PACKED_MUD,
+            ModBlocks.SUSPICIOUS_RED_SAND,
+            ModBlocks.SUSPICIOUS_ROOTED_DIRT,
+            ModBlocks.SUSPICIOUS_SOUL_SAND,
+            ModBlocks.SUSPICIOUS_SOUL_SOIL
         ));
     }
 }
