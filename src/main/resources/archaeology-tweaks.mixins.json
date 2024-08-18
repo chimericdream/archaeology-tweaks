@@ -3,7 +3,7 @@
     "minVersion": "0.8",
     "package": "com.chimericdream.archtweaks.mixin",
     "compatibilityLevel": "JAVA_21",
-    "mixins": ["BlockMixin"],
+    "mixins": ["BlockEntityTypeMixin", "BlockMixin"],
     "client": [],
     "injectors": {
         "defaultRequire": 1
