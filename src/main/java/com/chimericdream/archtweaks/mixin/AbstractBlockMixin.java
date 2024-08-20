@@ -1,6 +1,7 @@
 package com.chimericdream.archtweaks.mixin;
 
 import com.chimericdream.archtweaks.block.ModBlocks;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,9 +19,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Block.class)
-public abstract class BlockMixin {
+@Mixin(AbstractBlock.class)
+public abstract class AbstractBlockMixin {
     @Unique
     protected boolean canHideItems(Block target) {
         return
@@ -77,10 +81,11 @@ public abstract class BlockMixin {
         return ModBlocks.SUSPICIOUS_SOUL_SOIL.getDefaultState();
     }
 
-    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+    @Inject(method = "onUse", at = @At("HEAD"), cancellable = true)
+    protected void onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         Block target = state.getBlock();
         if (!canHideItems(target)) {
-            return ActionResult.PASS;
+            return;
         }
 
         BlockState newState = getHiddenState(target);
@@ -103,9 +108,7 @@ public abstract class BlockMixin {
                 player.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
             }
 
-            return ActionResult.SUCCESS;
+            cir.setReturnValue(ActionResult.SUCCESS);
         }
-
-        return ActionResult.PASS;
     }
 }
